@@ -1,0 +1,128 @@
+*{
+  font-family: sans-serif;
+}
+.head_line{
+
+  border-bottom: 2px solid slateblue;
+  width: max-content;
+  margin: auto;
+}
+
+.emy_details{
+  margin-top: 50px;
+  display: flex;
+}
+.form_wrapper{
+width: 100%;
+margin: 40px auto;
+}
+.form_wrapper form{
+width: 60%;
+margin: auto;
+display: flex;
+flex-direction: column;
+gap: 30px;
+
+}
+
+.form_wrapper form .common { 
+display: flex;
+align-items: center;
+}
+.form_wrapper form .common label{ 
+  flex: 8;
+
+}
+.form_wrapper form .common input{ 
+  flex: 12;
+ padding: 20px;
+}
+
+
+.asc-dsc-btns {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.asc-dsc-btns button{
+  background-color: rgb(114, 35, 114);
+  border-radius: 4px;
+  padding:  8px 16px;
+  color: whitesmoke;
+  cursor: pointer;
+}
+.asc-dsc-btns button:last-child{
+  background-color: slateblue;
+}
+
+.salary-range {
+  width: 100%;
+  margin: 20px auto;
+
+}
+.salary-range input{
+  width: 30%;
+  padding: 6px;
+  border: none;
+  border: 1px solid purple;
+  border-radius: 8px;
+  
+}
+.salary-range input:focus{
+
+  outline: 2px solid purple;
+
+}
+
+.app-submit-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.app-submit-btn button{
+  background-color: purple;
+  padding: 10px;
+  color: whitesmoke;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+
+.app-submit-btn button:last-child{
+background-color: slateblue;
+}
+
+.table_wrapper{
+  width: 100%;
+  margin: 40px auto;
+}
+.table_wrapper table thead tr th{
+  background-color: purple;
+  padding: 8px;
+  color: white;
+}
+
+
+.table_wrapper table tbody tr:nth-child(even) {
+  background-color: rgb(94, 169, 169);
+  color: white;
+}
+
+
+.table_wrapper table tbody tr td{
+  padding: 10px;
+}
+
+
+.head_line2{
+  border-bottom: 2px solid slateblue;
+  width: max-content;
+  margin: auto;
+}

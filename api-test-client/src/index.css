@@ -1,0 +1,9 @@
+a{
+    color: black;
+    
+}
+
+.text-warn{
+    color: rgb(220, 162, 2) !important;
+    font-weight: 700;
+}
