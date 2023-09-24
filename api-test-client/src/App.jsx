@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import './App.css'
 import EditPopup from './Component/EditPopup'
+import { userDetails } from './common'
 // import SalaryTab from './Component/SalaryTab'
 
 function App() {
@@ -13,6 +14,10 @@ function App() {
 
 
   // get oparation  
+
+  //  const userData = userDetails()
+  //  console.log(userData)
+
 
 
   useEffect(() => {
@@ -102,8 +107,8 @@ function App() {
       .then(response => {
 
         if (response.ok) {
-        setTrigger([])
-          }
+          setTrigger([])
+        }
       })
       .catch(error => {
         console.log(error)
@@ -163,7 +168,7 @@ function App() {
       const tempData = employ.sort((a, b) => {
         return b.salary - a.salary;
       });
-     
+
       setEmploy(tempData)
       setTrigger('dsc')
     }
@@ -172,127 +177,133 @@ function App() {
 
 
   return (
-   <>
-   
-   <div>
-      {
-        editToggle
-          ? <EditPopup
-            editToggle
-            ={editToggle
-            } setEditToggle={setEditToggle} singleData={singleData} setTrigger={setTrigger} /> : ''
+    <>
+      <div>
+        {
+          editToggle
+            ? <EditPopup
+              editToggle
+              ={editToggle
+              } setEditToggle={setEditToggle} singleData={singleData} setTrigger={setTrigger} /> : ''
 
-      }
-      <h2 className='head_line'>Company Employ Details</h2>
-      <div className='emy_details'>
+        }
+        <h2 className='head_line'>Company Employ Details</h2>
+        <div className='emy_details'>
 
-        <div className='form_wrapper'>
+          <div className='form_wrapper'>
 
-          <form onSubmit={handleForm}>
+            <form onSubmit={handleForm}>
 
-            <div className='common'>
-              <label htmlFor="">Name</label>
-              <input placeholder='Name' name='name' type="text" required />
+              <div className='common'>
+                <label htmlFor="">Name</label>
+                <input placeholder='Name' name='name' type="text" required />
+              </div>
+
+
+              <div className='common'>
+                <label htmlFor="">Position</label>
+                <input placeholder='Position' name='position' type="text" required />
+              </div>
+
+
+              <div className='common'>
+                <label htmlFor="">Grad</label>
+                <input placeholder='Grad' name='grad' type="text" required />
+              </div>
+
+
+              <div className='common'>
+                <label htmlFor="">Salary</label>
+                <input placeholder='Salary' name='salary' type="text" required />
+              </div>
+              <div className='common'>
+                <label htmlFor="">City</label>
+                <input placeholder='City' name='city' type="text" required />
+              </div>
+
+
+              <div className='submit-btn'>
+                <button type='submit'>Submit</button>
+              </div>
+            </form>
+
+          </div>
+
+          <div className='table_wrapper'>
+            <div className='client-side-asc'>
+
+              <h1>From Server Side</h1>
+              <div className='asc-dsc-btns'>
+                <button onClick={handleAsc}>ASC</button>
+                <button onClick={handleDsc}>DSC</button>
+
+              </div>
+
+
+
+              {/* <div className='client-side-asc'>
+              <h1>From Client Side</h1>
+              <div className='asc-dsc-btns'>
+                <button onClick={() => handleDscAsc(1)}>ASC</button>
+                <button onClick={() => handleDscAsc(2)}>DSC</button>
+
+              </div> */}
             </div>
 
+            <div className='salary-range'>
 
-            <div className='common'>
-              <label htmlFor="">Position</label>
-              <input placeholder='Position' name='position' type="text" required />
+              <input type="number" placeholder='Upto salary' onChange={(e) => handleSalaryRange(e.target.value)} />
+
             </div>
 
+            <table>
 
-            <div className='common'>
-              <label htmlFor="">Grad</label>
-              <input placeholder='Grad' name='grad' type="text" required />
-            </div>
+              <thead>
+                <tr>
+                  <th>SL.</th>
+                  <th>Name</th>
+                  <th>Position</th>
+                  <th>Grad</th>
+                  <th>Salary</th>
+                  <th>City</th>
+                </tr>
+              </thead>
 
+              <tbody>
 
-            <div className='common'>
-              <label htmlFor="">Salary</label>
-              <input placeholder='Salary' name='salary' type="text" required />
-            </div>
-            <div className='common'>
-              <label htmlFor="">City</label>
-              <input placeholder='City' name='city' type="text" required />
-            </div>
+                {
+                  employ.map((emp, index) => {
+                    return <tr key={index}>
+                      <td>{emp.id}</td>
+                      <td>{emp.name}</td>
+                      <td>{emp.grad}</td>
+                      <td>{emp.salary}</td>
+                      <td>{emp.city}</td>
+                      <td className='app-submit-btn'><button type='button' onClick={() => handleDelete(emp.id)}>Delete</button>
+                        <button type='button' onClick={() => handleEdit(emp.id)}>Edit</button></td>
+                    </tr>
 
+                  })
+                }
+              </tbody>
 
-            <div className='submit-btn'>
-              <button type='submit'>Submit</button>
-            </div>
-          </form>
+            </table>
 
+          </div>
         </div>
 
-        <div className='table_wrapper'>
-          <h1>From Server Side</h1>
-          <div className='asc-dsc-btns'>
-            <button onClick={handleAsc}>ASC</button>
-            <button onClick={handleDsc}>DSC</button>
-
-          </div>
-          <h1>From Client Side</h1>
-          <div className='asc-dsc-btns'>
-            <button onClick={() => handleDscAsc(1)}>ASC</button>
-            <button onClick={() => handleDscAsc(2)}>DSC</button>
-
-          </div>
-
-          <div className='salary-range'>
-
-            <input type="number" placeholder='Upto salary' onChange={(e) => handleSalaryRange(e.target.value)} />
-
-          </div>
-
-          <table>
-
-            <thead>
-              <tr>
-                <th>SL.</th>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Grad</th>
-                <th>Salary</th>
-                <th>City</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              {
-                employ.map((emp, index) => {
-                  return <tr key={index}>
-                    <td>{emp.id}</td>
-                    <td>{emp.name}</td>
-                    <td>{emp.grad}</td>
-                    <td>{emp.salary}</td>
-                    <td>{emp.city}</td>
-                    <td className='app-submit-btn'><button type='button' onClick={() => handleDelete(emp.id)}>Delete</button>
-                      <button type='button' onClick={() => handleEdit(emp.id)}>Edit</button></td>
-                  </tr>
-
-                })
-              }
-            </tbody>
-
-          </table>
-
-        </div>
-      </div>
 
 
 
 
 
-
-      {/* 
+        {/* 
       <h2 className='head_line2'>Company Salary Sheet</h2>
 
        <SalaryTab/> */}
 
-    </div>
-   </>
+      </div>
+    </>
   )
 }
 

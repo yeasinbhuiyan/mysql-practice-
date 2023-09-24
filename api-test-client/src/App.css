@@ -5,7 +5,7 @@
 
   border-bottom: 2px solid slateblue;
   width: max-content;
-  margin: auto;
+  margin: 50px auto;
 }
 
 .emy_details{
@@ -22,7 +22,6 @@ margin: auto;
 display: flex;
 flex-direction: column;
 gap: 30px;
-
 }
 
 .form_wrapper form .common { 
@@ -58,6 +57,17 @@ align-items: center;
 .asc-dsc-btns button:last-child{
   background-color: slateblue;
 }
+
+.client-side-asc{
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.client-side-asc h1{
+font-size: 20px;
+}
+
+
 
 .salary-range {
   width: 100%;
@@ -105,7 +115,7 @@ background-color: slateblue;
 }
 .table_wrapper table thead tr th{
   background-color: purple;
-  padding: 8px;
+  padding: 15px;
   color: white;
 }
 

@@ -24,9 +24,9 @@ const db = {
 
 // app.use(express.static(__dirname+"./public"));
 
-// app.use('/public', express.static('public'));
+app.use('/public', express.static('public'));
 
-app.use('/static', express.static(path.join(__dirname, './public')))
+// app.use('/static', express.static(path.join(__dirname, './public')))
 
 
 
@@ -55,6 +55,23 @@ app.get('/employ/:id', async (req, res) => {
     connection.release()
 
 })
+
+
+
+app.get('/get-user/:email', async (req, res) => {
+    const connection = await pool.getConnection()
+    const email = req?.params?.email
+    console.log(email)
+    try {
+        const [rows] = await connection.query(`SELECT * FROM users WHERE email ='${email}'`)
+        res.send(rows[0])
+    } catch (error) {
+        console.log('something is wrong')
+    }
+
+    connection.release()
+})
+
 
 
 app.post('/add-emp', async (req, res) => {
@@ -112,9 +129,14 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 //end profile picture image  
 
+
 app.post('/create-user', async (req, res) => {
     const connection = await pool.getConnection()
     const { username, password, email, profile } = req.body;
+
+    // check email  
+    
+
     const saltRounds = 10;
 
     const hashedPassword = await bcrypt.hash(password, saltRounds)
@@ -143,17 +165,18 @@ app.post('/create-user', async (req, res) => {
 
 app.post('/get-email', async (req, res) => {
     const connection = await pool.getConnection()
-    const {email} = req.body 
+    const { email } = req.body
+    console.log(email)
     const [rows] = await connection.query(`SELECT email FROM users WHERE email = '${email}' `)
-  
 
-    if(!rows[0]?.email){
-        res.send({error: false})
-    }else{
-       
-        res.send({error : true , message : 'This Email Already added'})
+
+    if (!rows[0]?.email) {
+        res.send({ error: false })
+    } else {
+
+        res.send({ error: true, message: 'This Email Already added' })
     }
-    
+
 })
 
 // 1st way  

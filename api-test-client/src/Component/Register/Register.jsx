@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css'
-import { useState } from 'react';
+import axios from 'axios';
 
 const Register = () => {
-    // const [profilePic, setProfilePic] = useState([])
+ 
     const navigate = useNavigate()
     const handleRegister = (e) => {
         e.preventDefault()
@@ -27,16 +27,11 @@ const Register = () => {
         // }
 
 
-        fetch('http://localhost:4040/get-email', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email })
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (!data?.error) {
+        axios.post('http://localhost:4040/get-email', { email })
+
+            .then(response => {
+                console.log(response?.data)
+                if (!response?.data?.error) {
                     console.log('This email is valid')
                     fetch('http://localhost:4040/upload', {
                         method: 'POST',
@@ -45,7 +40,6 @@ const Register = () => {
                         .then(res => res.json())
                         .then(data => {
                             if (data.filename) {
-                                // const imageName = data?.filename
                                 const userDetails = {
                                     username: name,
                                     email,
@@ -116,6 +110,92 @@ const Register = () => {
 
 
 
+
+        // fetch('http://localhost:4040/get-email', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({ email })
+        // })
+        //     .then(res => res.json())
+        //     .then(data => {
+        //         if (!data?.error) {
+        //             console.log('This email is valid')
+        //             fetch('http://localhost:4040/upload', {
+        //                 method: 'POST',
+        //                 body: formData
+        //             })
+        //                 .then(res => res.json())
+        //                 .then(data => {
+        //                     if (data.filename) {
+        //                         // const imageName = data?.filename
+        //                         const userDetails = {
+        //                             username: name,
+        //                             email,
+        //                             password,
+        //                             profile: data?.filename
+        //                         }
+
+        //                         fetch('http://localhost:4040/create-user', {
+        //                             method: 'POST',
+        //                             headers: {
+        //                                 'Content-type': 'application/json'
+        //                             },
+        //                             body: JSON.stringify(userDetails)
+        //                         })
+        //                             .then(res => res.json())
+        //                             .then(data => {
+
+        //                                 if (data[0].warningStatus > 0) {
+        //                                     alert('This Email Already Added')
+        //                                 } else {
+
+        //                                     if (data[0].insertId > 0) {
+        //                                         alert('Successfully Created Your Email')
+
+        //                                         //  for start set localStorage data 
+        //                                         fetch('http://localhost:4040/match-login', {
+        //                                             method: 'POST',
+        //                                             headers: {
+        //                                                 'Content-Type': 'application/json'
+        //                                             },
+        //                                             body: JSON.stringify(userDetails)
+        //                                         })
+        //                                             .then(res => res.json())
+        //                                             .then(dataa => {
+        //                                                 console.log(dataa[0])
+        //                                                 if (dataa[0]) {
+        //                                                     alert('successfully loging')
+        //                                                     localStorage.setItem('user', JSON.stringify(dataa[0]))
+        //                                                 }
+        //                                                 else {
+        //                                                     alert('something is wrong')
+        //                                                     localStorage.removeItem('user')
+        //                                                 }
+        //                                             })
+        //                                         // for end set localStorage data 
+
+        //                                         navigate('/')
+        //                                     }
+        //                                     else {
+        //                                         alert('Somthing is Happens Please try again')
+        //                                     }
+
+        //                                 }
+
+        //                             })
+        //                     }
+        //                     else {
+        //                         alert('this is not valid image ')
+        //                     }
+        //                 })
+
+
+        //         } else {
+        //             alert('this email already exists')
+        //         }
+        //     })
 
 
     }

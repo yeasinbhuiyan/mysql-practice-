@@ -1,8 +1,7 @@
-import React from 'react';
-
+import './Blog.css'
 const Blog = () => {
     return (
-        <div>
+        <div className='blog'>
             <h1>This is blog section </h1>
             <p>
                 Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maxime accusantium, quaerat qui nisi sit

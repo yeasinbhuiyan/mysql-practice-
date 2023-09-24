@@ -6,7 +6,7 @@
 .navbar ul{
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: flex-end;
     gap: 30px;
 }
 
@@ -34,4 +34,12 @@
   padding: 10px;
   border: none;
   cursor: pointer;
+}
+
+.avater img{
+width: 50px;
+height: 60px;
+border-radius: 100%;
+cursor: pointer;
+
 }
