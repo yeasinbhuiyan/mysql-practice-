@@ -3,7 +3,7 @@ import './Register.css'
 import axios from 'axios';
 
 const Register = () => {
- 
+
     const navigate = useNavigate()
     const handleRegister = (e) => {
         e.preventDefault()
@@ -19,65 +19,37 @@ const Register = () => {
         formData.append('file', profilePic);
 
 
-        // const userDetails = {
-        //     username: name,
-        //     email,
-        //     password,
-
-        // }
-
 
         axios.post('http://localhost:4040/get-email', { email })
-
-            .then(response => {
-                console.log(response?.data)
-                if (!response?.data?.error) {
-                    console.log('This email is valid')
-                    fetch('http://localhost:4040/upload', {
-                        method: 'POST',
-                        body: formData
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.filename) {
+            .then((getEmailRes) => {
+                if (!getEmailRes?.data?.error) {
+                    console.log(getEmailRes?.data?.error)
+                    axios.post('http://localhost:4040/upload', formData)
+                        .then(imgData => {
+                            if (imgData?.data?.filename) {
                                 const userDetails = {
                                     username: name,
                                     email,
                                     password,
-                                    profile: data?.filename
+                                    profile: imgData?.data?.filename
                                 }
 
-                                fetch('http://localhost:4040/create-user', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json'
-                                    },
-                                    body: JSON.stringify(userDetails)
-                                })
-                                    .then(res => res.json())
-                                    .then(data => {
-
-                                        if (data[0].warningStatus > 0) {
+                                axios.post('http://localhost:4040/create-user', userDetails)
+                                    .then(response => {
+                                        console.log(response?.data)
+                                        // todo 
+                                        if (response?.data[0]?.warningStatus > 0) {
                                             alert('This Email Already Added')
                                         } else {
-
-                                            if (data[0].insertId > 0) {
+                                            console.log(response?.data)
+                                            if (response?.data[0]?.insertId > 0) {
                                                 alert('Successfully Created Your Email')
-
                                                 //  for start set localStorage data 
-                                                fetch('http://localhost:4040/match-login', {
-                                                    method: 'POST',
-                                                    headers: {
-                                                        'Content-Type': 'application/json'
-                                                    },
-                                                    body: JSON.stringify(userDetails)
-                                                })
-                                                    .then(res => res.json())
-                                                    .then(dataa => {
-                                                        console.log(dataa[0])
-                                                        if (dataa[0]) {
-                                                            alert('successfully loging')
-                                                            localStorage.setItem('user', JSON.stringify(dataa[0]))
+                                                axios.post('http://localhost:4040/details-set', userDetails)
+                                                    .then(userDetailsRes => {
+
+                                                        if (userDetailsRes?.data[0]) {
+                                                            localStorage.setItem('user', JSON.stringify(userDetailsRes?.data[0]))
                                                         }
                                                         else {
                                                             alert('something is wrong')
@@ -95,22 +67,28 @@ const Register = () => {
                                         }
 
                                     })
+
                             }
                             else {
                                 alert('this is not valid image ')
                             }
                         })
-
+                        .catch((err) => {
+                            console.log(err)
+                        })
 
                 } else {
-                    alert('this email already exists')
+                    alert('this email already exist')
                 }
+
+            })
+            .catch((error) => {
+                console.log(error)
             })
 
 
 
-
-
+        // 2nd way 
         // fetch('http://localhost:4040/get-email', {
         //     method: 'POST',
         //     headers: {
@@ -196,7 +174,6 @@ const Register = () => {
         //             alert('this email already exists')
         //         }
         //     })
-
 
     }
 

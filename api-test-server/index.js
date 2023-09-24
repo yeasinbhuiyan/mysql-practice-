@@ -111,73 +111,151 @@ const storage = multer.diskStorage({
 })
 
 
-
 const upload = multer({
     storage, limits: {
         fileSize: 1024 * 1024 * 5, // 5MB (adjust as needed)
     },
 })
 
+const isThereEmail = async (req, res, next) => {
+    const f = true;
+    if (f) {
+        next()
+    }
+    else {
+        return res.status(201).send({ error: true, message: 'this is not valid email' })
+    }
+
+}
 
 
-
-app.post('/upload', upload.single('file'), (req, res) => {
-    console.log(req.file.filename, 'profile body')
+app.post('/upload', isThereEmail, upload.single('file'), (req, res) => {
+    console.log(req?.file?.filename, 'profile body')
     res.send(req.file)
 })
+
+// app.post('/upload', upload.single('file'), (req, res) => {
+//     console.log(req.file.filename, 'profile body')
+//     res.send(req.file)
+// })
 
 
 //end profile picture image  
 
 
+// app.post('/create-user', async (req, res) => {
+//     const connection = await pool.getConnection()
+//     const { username, password, email, profile } = req.body;
+
+
+//     const saltRounds = 10;
+
+//     const hashedPassword = await bcrypt.hash(password, saltRounds)
+
+//     const query = 'INSERT IGNORE INTO users (username, password_hash , email,profile) VALUES (?, ?, ?,?)';
+
+//     const userDetails = [
+//         username,
+//         hashedPassword,
+//         email,
+//         profile
+//     ]
+
+//     const response = await connection.query(query, userDetails, (error, results) => {
+//         if (error) {
+//             res.status(500).send({ error: 'Internal server error' });
+//         } else {
+//             res.status(200).send({ message: 'User registered successfully' });
+//         }
+
+//     });
+
+//     res.send(response)
+//     connection.release()
+// })
+
+
 app.post('/create-user', async (req, res) => {
     const connection = await pool.getConnection()
-    const { username, password, email, profile } = req.body;
+    const { username, password, email, profile } = req?.body;
 
     // check email  
-    
+    const [rows] = await connection.query(`SELECT * FROM users WHERE email ='${email}'`)
 
-    const saltRounds = 10;
 
-    const hashedPassword = await bcrypt.hash(password, saltRounds)
+    if (!rows[0]?.email) {
 
-    const query = 'INSERT IGNORE INTO users (username, password_hash , email,profile) VALUES (?, ?, ?,?)';
+        const saltRounds = 10;
 
-    const userDetails = [
-        username,
-        hashedPassword,
-        email,
-        profile
-    ]
+        const hashedPassword = await bcrypt.hash(password, saltRounds)
 
-    const response = await connection.query(query, userDetails, (error, results) => {
-        if (error) {
-            res.status(500).send({ error: 'Internal server error' });
-        } else {
-            res.status(200).send({ message: 'User registered successfully' });
-        }
+        const query = 'INSERT IGNORE INTO users (username, password_hash , email,profile) VALUES (?, ?, ?,?)';
 
-    });
+        const userDetails = [
+            username,
+            hashedPassword,
+            email,
+            profile
+        ]
 
-    res.send(response)
+
+
+        const response = await connection.query(query, userDetails, (error, results) => {
+            if (error) {
+                res.status(500).send({ error: 'Internal server error' });
+            } else {
+                res.status(200).send({ message: 'User registered successfully' });
+            }
+
+        });
+
+        res.send(response)
+
+
+    } else {
+
+        res.send({ error: true, message: 'This Email Already added' })
+    }
+
+
+
     connection.release()
 })
 
 app.post('/get-email', async (req, res) => {
     const connection = await pool.getConnection()
     const { email } = req.body
-    console.log(email)
+ 
+
     const [rows] = await connection.query(`SELECT email FROM users WHERE email = '${email}' `)
-
-
+    
     if (!rows[0]?.email) {
         res.send({ error: false })
     } else {
 
         res.send({ error: true, message: 'This Email Already added' })
     }
-
+    connection.release()
 })
+
+
+// app.post('/get-email', async (req, res) => {
+//     const connection = await pool.getConnection()
+//     const { email } = req.body
+//     console.log(email)
+//     const [rows] = await connection.query(`SELECT email FROM users WHERE email = '${email}' `)
+
+
+//     if (!rows[0]?.email) {
+//         res.send({ error: false })
+//     } else {
+
+//         res.send({ error: true, message: 'This Email Already added' })
+//     }
+
+// })
+
+
 
 // 1st way  
 
@@ -269,7 +347,7 @@ app.post('/get-email', async (req, res) => {
 
 
 
-app.post('/match-login', async (req, res) => {
+app.post('/details-set', async (req, res) => {
     try {
         const connection = await pool.getConnection();
         const { email, password } = req.body;
