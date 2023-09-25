@@ -117,27 +117,27 @@ const upload = multer({
     },
 })
 
-const isThereEmail = async (req, res, next) => {
-    const f = true;
-    if (f) {
-        next()
-    }
-    else {
-        return res.status(201).send({ error: true, message: 'this is not valid email' })
-    }
+// const isThereEmail = async (req, res, next) => {
+//     const f = true;
+//     if (f) {
+//         next()
+//     }
+//     else {
+//         return res.status(201).send({ error: true, message: 'this is not valid email' })
+//     }
 
-}
+// }
 
 
-app.post('/upload', isThereEmail, upload.single('file'), (req, res) => {
+// app.post('/upload', isThereEmail, upload.single('file'), (req, res) => {
+//     console.log(req?.file?.filename, 'profile body')
+//     res.send(req.file)
+// })
+
+app.post('/upload', upload.single('file'), (req, res) => {
     console.log(req?.file?.filename, 'profile body')
     res.send(req.file)
 })
-
-// app.post('/upload', upload.single('file'), (req, res) => {
-//     console.log(req.file.filename, 'profile body')
-//     res.send(req.file)
-// })
 
 
 //end profile picture image  
@@ -307,43 +307,42 @@ app.post('/get-email', async (req, res) => {
 
 // 2nd way  
 
-// app.post('/match-login', async (req, res) => {
-//     try {
-//         const connection = await pool.getConnection();
-//         const { email, password } = req.body;
+app.post('/match-login', async (req, res) => {
+    try {
+        const connection = await pool.getConnection();
+        const { email, password } = req.body;
 
-//         const query = `SELECT password_hash from users where email ='${email}'`;
-//         const [results] = await connection.query(query, [email]);
-//         console.log(results)
-//         if (results.length === 0) {
-//             console.log('User not found');
-//             res.status(401).json({ error: 'User not found' });
-//         } else {
-//             const hashedPassword = results[0].password_hash;
-//             console.log(hashedPassword, 'hashedPassword');
+        const query = `SELECT * from users WHERE email ='${email}'`;
+        const [results] = await connection.query(query, [email]);
+   
+        if (results.length === 0) {
+            console.log('User not found');
+            res.status(401).json({ error: 'User not found' });
+        } else {
+            const hashedPassword = results[0].password_hash;
 
-//             // Compare the provided password with the stored hashed password
-//             try {
-//                 const passwordMatch = await bcrypt.compare(password, hashedPassword);
-//                 console.log(passwordMatch, 'passwordMatch');
-//                 if (passwordMatch) {
-//                     res.status(200).json({ message: 'Login successful' });
-//                 } else {
-//                     res.status(401).json({ error: 'Incorrect password' });
-//                 }
-//             } catch (error) {
-//                 console.error('Error comparing passwords:', error);
-//                 res.status(500).json({ error: 'Internal server error' });
-//             }
-//         }
+            // Compare the provided password with the stored hashed password
+            try {
+                const passwordMatch = await bcrypt.compare(password, hashedPassword);
 
-//         // Release the database connection
-//         connection.release();
-//     } catch (error) {
-//         console.error('Error retrieving user data:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+        
+                if(passwordMatch){
+                    console.log(query)
+                    res.send(results)
+                }
+                else{
+                    res.send({error: true})
+                }
+              
+            } catch (error) {
+                res.status(500).json({ error: 'Internal server error' });
+            }
+        }
+        connection.release();
+    } catch (error) {
+        console.error('Server Error');
+    }
+});
 
 
 
@@ -397,7 +396,7 @@ app.post('/match-user', async (req, res) => {
         const query = `SELECT * from users where email ='${email}'`;
 
         const [results] = await connection.query(query, [email]);
-        const databasePass = results[0].password_hash
+        const databasePass = results[0]?.password_hash
         const storagePass = password
 
         if (databasePass === storagePass) {

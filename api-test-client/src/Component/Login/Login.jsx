@@ -1,6 +1,10 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Login.css'
+import axios from 'axios';
+import { useContext } from 'react';
+import { AuthContext } from '../../AuthProvider/AuthProvider';
 const Login = () => {
+    const { setTrigger } = useContext(AuthContext)
     const navigate = useNavigate()
     const location = useLocation()
 
@@ -10,7 +14,7 @@ const Login = () => {
 
 
         e.preventDefault()
-        
+
 
         const form = e.target
         const email = form.email.value
@@ -21,47 +25,27 @@ const Login = () => {
             password
         }
 
-        
+        axios.post('http://localhost:4040/match-login', loginDetails)
+            .then(loginRes => {
+                console.log(loginRes)
 
-        fetch('http://localhost:4040/match-login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(loginDetails)
-        })
-           .then(res=> res.json())
-           .then(dataa => {
-            console.log(dataa[0])
-            if(dataa[0]){
-                alert('successfully loging')
-                localStorage.setItem('user' , JSON.stringify(dataa[0]))
-                navigate(nfrom)
-            }
-            else{
-                alert('something is wrong')
-                localStorage.removeItem('user')
-            }
-           })
+                if (loginRes?.data[0]) {
+                    alert('successfully loging')
+                    setTrigger('reload')
 
-        
+                    localStorage.setItem('user', JSON.stringify(loginRes?.data[0]))
+                    navigate(nfrom)
+                    // window.location.reload(false)
+                }
+                else {
+                    alert('something is wrong')
+                    // localStorage.removeItem('user')
+                }
+            })
+
+
     }
 
-
-    // .then(response => {
-    //     console.log(response)
-    //     if (response.ok) {
-    //         alert('Successfully Logging')
-    //         navigate(nfrom)
-    //         localStorage.setItem('user' , JSON.stringify(loginDetails))
-    //     }
-    //     else{
-    //         alert('This is not Valid email or Password')
-    //     }
-    // })
-    // .then(err => {
-    //     console.log(err)
-    // })
 
 
     return (

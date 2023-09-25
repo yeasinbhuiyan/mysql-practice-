@@ -14,43 +14,50 @@ import Blog from './page/Blog/Blog.jsx';
 import About from './page/About/About.jsx';
 import Login from './Component/Login/Login.jsx';
 import Register from './Component/Register/Register.jsx';
+import AuthProvider from './AuthProvider/AuthProvider.jsx';
 
 const router = createBrowserRouter([
   {
-    path : '/',
-    element : <Layout/>,
-    children : [
+    path: '/',
+    element: <Layout />,
+    children: [
       {
-        path : '/',
-        element : <Home/>,
+        path: '/',
+        element: <Home />,
       },
       {
-        path : '/employ-details',
-        element : <PrivateRoter><App/></PrivateRoter>,
+        path: '/employ-details',
+        element: <PrivateRoter><App /></PrivateRoter>,
       },
       {
-        path : '/blog',
-        element : <PrivateRoter><Blog/></PrivateRoter>,
+        path: '/blog',
+        element: <PrivateRoter><Blog /></PrivateRoter>,
       },
       {
-        path : '/about',
-        element : <PrivateRoter><About/></PrivateRoter>,
+        path: '/about',
+        element: <PrivateRoter><About /></PrivateRoter>,
       },
 
       {
         path: '/login',
-        element: <Login/>
-      },{
+        element: <Login />
+      }, {
         path: '/register',
-        element: <Register/>
+        element: <Register />
       }
-      
+
     ]
   }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+
+    <AuthProvider>
+
+      <RouterProvider router={router} />
+
+    </AuthProvider>
+
   </React.StrictMode>,
 )

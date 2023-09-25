@@ -1,14 +1,16 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './Register.css'
 import axios from 'axios';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../AuthProvider/AuthProvider';
 
 const Register = () => {
+    const {trigger, setTrigger} = useContext(AuthContext)
 
     const navigate = useNavigate()
     const handleRegister = (e) => {
         e.preventDefault()
         const form = e.target
-
         const name = form.name.value
         const email = form.email.value
         const password = form.password.value
@@ -49,6 +51,7 @@ const Register = () => {
                                                     .then(userDetailsRes => {
 
                                                         if (userDetailsRes?.data[0]) {
+                                                            setTrigger('reload')
                                                             localStorage.setItem('user', JSON.stringify(userDetailsRes?.data[0]))
                                                         }
                                                         else {
